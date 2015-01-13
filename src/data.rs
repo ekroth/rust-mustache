@@ -7,7 +7,7 @@ pub enum Data<'a> {
     Bool(bool),
     Vec(Vec<Data<'a>>),
     Map(HashMap<String, Data<'a>>),
-    Fun(RefCell<|String|: 'a -> String>),
+    Fun(RefCell<Fn(String) -> String + 'a>),
 }
 
 impl<'a> PartialEq for Data<'a> {

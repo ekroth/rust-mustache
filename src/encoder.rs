@@ -42,39 +42,46 @@ impl<'a> rustc_serialize::Encoder<Error> for Encoder<'a> {
     }
     fn emit_str(&mut self, v: &str) -> EncoderResult { self.data.push(Data::Str(v.to_string())); Ok(()) }
 
-    fn emit_enum<F>(&mut self, _name: &str, _f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_enum<F>(&mut self, _name: &str, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_enum_variant<F>(&mut self, _name: &str, _id: uint, _len: uint, _f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_enum_variant<F>(&mut self, _name: &str, _id: uint, _len: uint, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_enum_variant_arg<F>(&mut self, _a_idx: uint, _f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_enum_variant_arg<F>(&mut self, _a_idx: uint, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_enum_struct_variant<F>(&mut self, _v_name: &str, _v_id: uint, _len: uint, _f: F)
-            -> EncoderResult where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_enum_struct_variant<F>(&mut self, _v_name: &str, _v_id: uint, _len: uint, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_enum_struct_variant_field<F>(&mut self, _f_name: &str, _f_idx: uint, _f: F)
-            -> EncoderResult where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_enum_struct_variant_field<F>(&mut self, _f_name: &str, _f_idx: uint, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_struct<F>(&mut self, _name: &str, _len: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_struct<F>(&mut self, _name: &str, _len: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.data.push(Data::Map(HashMap::new()));
         f(self)
     }
 
-    fn emit_struct_field<F>(&mut self, name: &str, _idx: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_struct_field<F>(&mut self, name: &str, _idx: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         let mut m = match self.data.pop() {
             Some(Data::Map(m)) => m,
             _ => { return Err(Error::UnsupportedType); }
@@ -89,29 +96,34 @@ impl<'a> rustc_serialize::Encoder<Error> for Encoder<'a> {
         Ok(())
     }
 
-    fn emit_tuple<F>(&mut self, len: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_tuple<F>(&mut self, len: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.emit_seq(len, f)
     }
 
-    fn emit_tuple_arg<F>(&mut self, idx: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_tuple_arg<F>(&mut self, idx: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.emit_seq_elt(idx, f)
     }
 
-    fn emit_tuple_struct<F>(&mut self, _name: &str, len: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_tuple_struct<F>(&mut self, _name: &str, len: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.emit_seq(len, f)
     }
 
-    fn emit_tuple_struct_arg<F>(&mut self, idx: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_tuple_struct_arg<F>(&mut self, idx: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.emit_seq_elt(idx, f)
     }
 
     // Specialized types:
-    fn emit_option<F>(&mut self, _f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_option<F>(&mut self, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
@@ -119,19 +131,22 @@ impl<'a> rustc_serialize::Encoder<Error> for Encoder<'a> {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_option_some<F>(&mut self, _f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_option_some<F>(&mut self, _f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         Err(Error::UnsupportedType)
     }
 
-    fn emit_seq<F>(&mut self, _len: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_seq<F>(&mut self, _len: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.data.push(Data::Vec(Vec::new()));
         f(self)
     }
 
-    fn emit_seq_elt<F>(&mut self, _idx: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_seq_elt<F>(&mut self, _idx: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         let mut v = match self.data.pop() {
             Some(Data::Vec(v)) => v,
             _ => { return Err(Error::UnsupportedType); }
@@ -146,14 +161,16 @@ impl<'a> rustc_serialize::Encoder<Error> for Encoder<'a> {
         Ok(())
     }
 
-    fn emit_map<F>(&mut self, _len: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_map<F>(&mut self, _len: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         self.data.push(Data::Map(HashMap::new()));
         f(self)
     }
 
-    fn emit_map_elt_key<F>(&mut self, _idx: uint, mut f: F) -> EncoderResult
-            where F : FnMut(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_map_elt_key<F>(&mut self, _idx: uint, mut f: F) -> EncoderResult where
+        F: FnMut(&mut Encoder<'a>) -> EncoderResult,
+    {
         try!(f(self));
         let last = match self.data.last() {
             Some(d) => d,
@@ -165,8 +182,9 @@ impl<'a> rustc_serialize::Encoder<Error> for Encoder<'a> {
         }
     }
 
-    fn emit_map_elt_val<F>(&mut self, _idx: uint, f: F) -> EncoderResult
-            where F : FnOnce(&mut Encoder<'a>) -> EncoderResult {
+    fn emit_map_elt_val<F>(&mut self, _idx: uint, f: F) -> EncoderResult where
+        F: FnOnce(&mut Encoder<'a>) -> EncoderResult,
+    {
         let k = match self.data.pop() {
             Some(Data::Str(s)) => s,
             _ => { return Err(Error::KeyIsNotString); }

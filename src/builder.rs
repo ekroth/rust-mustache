@@ -103,7 +103,9 @@ impl<'a> MapBuilder<'a> {
     ///     .build();
     /// ```
     #[inline]
-    pub fn insert_vec<K: StrAllocating>(self, key: K, f: |VecBuilder<'a>| -> VecBuilder<'a>) -> MapBuilder<'a> {
+    pub fn insert_vec<K: StrAllocating, F>(self, key: K, f: F) -> MapBuilder<'a> where
+        F: FnOnce(VecBuilder<'a>) -> VecBuilder<'a>,
+    {
         let MapBuilder { mut data } = self;
         let builder = f(VecBuilder::new());
         data.insert(key.into_string(), builder.build());
@@ -128,7 +130,9 @@ impl<'a> MapBuilder<'a> {
     ///     .build();
     /// ```
     #[inline]
-    pub fn insert_map<K: StrAllocating>(self, key: K, f: |MapBuilder<'a>| -> MapBuilder<'a>) -> MapBuilder<'a> {
+    pub fn insert_map<K: StrAllocating, F>(self, key: K, f: F) -> MapBuilder<'a> where
+        F: FnOnce(MapBuilder<'a>) -> MapBuilder<'a>,
+    {
         let MapBuilder { mut data } = self;
         let builder = f(MapBuilder::new());
         data.insert(key.into_string(), builder.build());
@@ -148,7 +152,9 @@ impl<'a> MapBuilder<'a> {
     ///     .build();
     /// ```
     #[inline]
-    pub fn insert_fn<K: StrAllocating>(self, key: K, f: |String|: 'a -> String) -> MapBuilder<'a> {
+    pub fn insert_fn<K: StrAllocating, F>(self, key: K, f: F) -> MapBuilder<'a> where
+        F: Fn(String) -> String + 'a,
+    {
         let MapBuilder { mut data } = self;
         data.insert(key.into_string(), Data::Fun(RefCell::new(f)));
         MapBuilder { data: data }
@@ -238,7 +244,9 @@ impl<'a> VecBuilder<'a> {
     ///     .build();
     /// ```
     #[inline]
-    pub fn push_vec(self, f: |VecBuilder<'a>| -> VecBuilder<'a>) -> VecBuilder<'a> {
+    pub fn push_vec<F>(self, f: F) -> VecBuilder<'a> where
+        F: FnOnce(VecBuilder<'a>) -> VecBuilder<'a>,
+    {
         let VecBuilder { mut data } = self;
         let builder = f(VecBuilder::new());
         data.push(builder.build());
@@ -263,7 +271,9 @@ impl<'a> VecBuilder<'a> {
     ///     .build();
     /// ```
     #[inline]
-    pub fn push_map(self, f: |MapBuilder<'a>| -> MapBuilder<'a>) -> VecBuilder<'a> {
+    pub fn push_map<F>(self, f: F) -> VecBuilder<'a> where
+        F: FnOnce(MapBuilder<'a>) -> MapBuilder<'a>,
+    {
         let VecBuilder { mut data } = self;
         let builder = f(MapBuilder::new());
         data.push(builder.build());
@@ -283,7 +293,9 @@ impl<'a> VecBuilder<'a> {
     ///     .build();
     /// ```
     #[inline]
-    pub fn push_fn(self, f: |String|: 'a -> String) -> VecBuilder<'a> {
+    pub fn push_fn<F>(self, f: F) -> VecBuilder<'a> where
+        F: FnOnce(String) -> String + 'a,
+    {
         let VecBuilder { mut data } = self;
         data.push(Data::Fun(RefCell::new(f)));
         VecBuilder { data: data }

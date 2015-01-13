@@ -281,13 +281,14 @@ impl<'a> RenderContext<'a> {
         }
     }
 
-    fn render_fun(
+    fn render_fun<F>(
         &self,
         src: &str,
         otag: &str,
         ctag: &str,
-        f: &RefCell<|String| -> String>
-    ) -> Vec<parser::Token> {
+        f: &RefCell<F>) -> Vec<parser::Token> where
+        F: Fn(String) -> String,
+    {
         let f = &mut *f.borrow_mut();
         let src = (*f)(src.to_string());
 
